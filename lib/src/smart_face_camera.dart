@@ -184,10 +184,10 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                     fontSize: 18.0,
                     fontWeight: FontWeight.w500,
                   )),
-              CustomPaint(
+              widget.noCameraScreen != null ? CustomPaint(
                 size: size,
                 painter: HolePainter(),
-              )
+              ) : const SizedBox()
             ],
             if (widget.showControls) ...[
               Align(
