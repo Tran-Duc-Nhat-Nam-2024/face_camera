@@ -53,6 +53,9 @@ class SmartFaceCamera extends StatefulWidget {
   /// The controller for the [SmartFaceCamera] widget.
   final FaceCameraController controller;
 
+  /// The screen show when no camera have been detected.
+  final Widget? noCameraScreen;
+
   const SmartFaceCamera(
       {required this.controller,
       this.showControls = true,
@@ -69,6 +72,7 @@ class SmartFaceCamera extends StatefulWidget {
       this.indicatorShape = IndicatorShape.defaultShape,
       this.indicatorAssetImage,
       this.indicatorBuilder,
+      this.noCameraScreen,
       this.autoDisableCaptureControl = false,
       Key? key})
       : assert(
@@ -175,7 +179,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                 ),
               )
             ] else ...[
-              const Text('No Camera Detected',
+              widget.noCameraScreen ?? const Text('No Camera Detected',
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w500,
