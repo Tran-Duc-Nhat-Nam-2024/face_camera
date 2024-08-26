@@ -109,53 +109,14 @@ class FaceIdentifier {
 
   static _extractFace(List<Face> faces) {
     //List<Rect> rect = [];
-    bool wellPositioned = faces.isNotEmpty;
+    bool wellPositioned = false;
     Face? detectedFace;
 
     for (Face face in faces) {
-      // rect.add(face.boundingBox);
       detectedFace = face;
 
-      // Head is rotated to the right rotY degrees
-      if (face.headEulerAngleY! > 2 || face.headEulerAngleY! < -2) {
-        wellPositioned = false;
-      }
-
-      // Head is tilted sideways rotZ degrees
-      if (face.headEulerAngleZ! > 2 || face.headEulerAngleZ! < -2) {
-        wellPositioned = false;
-      }
-
-      // If landmark detection was enabled with FaceDetectorOptions (mouth, ears,
-      // eyes, cheeks, and nose available):
-      final FaceLandmark? leftEar = face.landmarks[FaceLandmarkType.leftEar];
-      final FaceLandmark? rightEar = face.landmarks[FaceLandmarkType.rightEar];
-      final FaceLandmark? bottomMouth =
-          face.landmarks[FaceLandmarkType.bottomMouth];
-      final FaceLandmark? rightMouth =
-          face.landmarks[FaceLandmarkType.rightMouth];
-      final FaceLandmark? leftMouth =
-          face.landmarks[FaceLandmarkType.leftMouth];
-      final FaceLandmark? noseBase = face.landmarks[FaceLandmarkType.noseBase];
-      if (leftEar == null ||
-          rightEar == null ||
-          bottomMouth == null ||
-          rightMouth == null ||
-          leftMouth == null ||
-          noseBase == null) {
-        wellPositioned = false;
-      }
-
-      if (face.leftEyeOpenProbability != null) {
-        if (face.leftEyeOpenProbability! < 0.5) {
-          wellPositioned = false;
-        }
-      }
-
-      if (face.rightEyeOpenProbability != null) {
-        if (face.rightEyeOpenProbability! < 0.5) {
-          wellPositioned = false;
-        }
+      if (face.headEulerAngleX! < 5 && face.headEulerAngleX! > -5 && face.headEulerAngleY! < 5 && face.headEulerAngleY! > -5 && face.headEulerAngleZ! < 5 && face.headEulerAngleZ! > -5) {
+        wellPositioned = true;
       }
     }
 
