@@ -19,6 +19,7 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     this.defaultFlashMode = CameraFlashMode.auto,
     this.enableAudio = true,
     this.autoCapture = false,
+    this.wellPositioned = true,
     this.orientation = CameraOrientation.portraitUp,
     this.performanceMode = FaceDetectorMode.fast,
     required this.onCapture,
@@ -39,6 +40,9 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
 
   /// Set true to capture image on face detected.
   final bool autoCapture;
+
+  /// Set false to disable face position check.
+  final bool wellPositioned;
 
   /// Use this to lock camera orientation.
   final CameraOrientation? orientation;
@@ -183,7 +187,7 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
 
           if (result != null) {
             try {
-              if (result.wellPositioned) {
+              if (result.wellPositioned || !wellPositioned) {
                 onFaceDetected?.call(result.face);
                 if (autoCapture) {
                   captureImage();
