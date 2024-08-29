@@ -11,7 +11,8 @@ class FaceIdentifier {
   static Future<DetectedFace?> scanImage(
       {required CameraImage cameraImage,
       required CameraController? controller,
-      required FaceDetectorMode performanceMode}) async {
+      required FaceDetectorMode performanceMode,
+      double offSetX = 5, double offSetY = 5, double offSetZ = 5}) async {
     final orientations = {
       DeviceOrientation.portraitUp: 0,
       DeviceOrientation.landscapeLeft: 90,
@@ -23,7 +24,8 @@ class FaceIdentifier {
     final face = await _detectFace(
         performanceMode: performanceMode,
         visionImage:
-            _inputImageFromCameraImage(cameraImage, controller, orientations));
+            _inputImageFromCameraImage(cameraImage, controller, orientations)
+        , offSetX: offSetX, offSetY: offSetY, offSetZ: offSetZ);
     if (face != null) {
       result = face;
     }
@@ -90,7 +92,8 @@ class FaceIdentifier {
 
   static Future<DetectedFace?> _detectFace(
       {required InputImage? visionImage,
-      required FaceDetectorMode performanceMode}) async {
+      required FaceDetectorMode performanceMode,
+        double offSetX = 5, double offSetY = 5, double offSetZ = 5}) async {
     if (visionImage == null) return null;
     final options = FaceDetectorOptions(
         enableLandmarks: true,
@@ -99,7 +102,7 @@ class FaceIdentifier {
     final faceDetector = FaceDetector(options: options);
     try {
       final List<Face> faces = await faceDetector.processImage(visionImage);
-      final faceDetect = _extractFace(faces);
+      final faceDetect = _extractFace(faces, offSetX: offSetX, offSetY: offSetY, offSetZ: offSetZ);
       return faceDetect;
     } catch (error) {
       debugPrint(error.toString());
@@ -107,7 +110,8 @@ class FaceIdentifier {
     }
   }
 
-  static _extractFace(List<Face> faces) {
+  static _extractFace(List<Face> faces, {
+  double offSetX = 5, double offSetY = 5, double offSetZ = 5}) {
     //List<Rect> rect = [];
     bool wellPositioned = false;
     Face? detectedFace;
@@ -115,7 +119,7 @@ class FaceIdentifier {
     for (Face face in faces) {
       detectedFace = face;
 
-      if (face.headEulerAngleX! < 5 && face.headEulerAngleX! > -5 && face.headEulerAngleY! < 5 && face.headEulerAngleY! > -5 && face.headEulerAngleZ! < 5 && face.headEulerAngleZ! > -5) {
+      if (face.headEulerAngleX! < offSetX && face.headEulerAngleX! > -offSetX && face.headEulerAngleY! < offSetY && face.headEulerAngleY! > -offSetY && face.headEulerAngleZ! < offSetZ && face.headEulerAngleZ! > -offSetZ) {
         wellPositioned = true;
       }
     }
