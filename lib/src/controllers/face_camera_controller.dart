@@ -20,6 +20,9 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     this.enableAudio = true,
     this.autoCapture = false,
     this.wellPositioned = true,
+    this.offSetX = 5,
+    this.offSetY = 5,
+    this.offSetZ = 5,
     this.orientation = CameraOrientation.portraitUp,
     this.performanceMode = FaceDetectorMode.fast,
     required this.onCapture,
@@ -43,6 +46,15 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
 
   /// Set false to disable face position check.
   final bool wellPositioned;
+
+  /// Set vertical off set degree(s) when detect face.
+  final double offSetX;
+
+  /// Set horizontal off set degree(s) when detect face.
+  final double offSetY;
+
+  /// Set rotating off set degree(s) when detect face.
+  final double offSetZ;
 
   /// Use this to lock camera orientation.
   final CameraOrientation? orientation;
@@ -181,7 +193,10 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
         await FaceIdentifier.scanImage(
                 cameraImage: cameraImage,
                 controller: cameraController,
-                performanceMode: performanceMode)
+                performanceMode: performanceMode,
+                offSetZ: offSetZ,
+                offSetY: offSetY,
+                offSetX: offSetX)
             .then((result) async {
           value = value.copyWith(detectedFace: result);
 
