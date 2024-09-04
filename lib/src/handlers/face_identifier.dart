@@ -123,7 +123,7 @@ class FaceIdentifier {
         wellPositioned = true;
       }
 
-      if (face.boundingBox.left < boundingLeft && face.boundingBox.right > boundingRight && face.boundingBox.top < boundingTop && face.boundingBox.bottom > boundingBottom) {
+      if (face.boundingBox.left < boundingLeft || face.boundingBox.right > boundingRight || face.boundingBox.top < boundingTop || face.boundingBox.bottom > boundingBottom) {
         wellPositioned = false;
       }
     }
