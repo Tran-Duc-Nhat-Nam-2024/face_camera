@@ -23,6 +23,10 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     this.offSetX = 5,
     this.offSetY = 5,
     this.offSetZ = 5,
+    this.boundingLeft = 0,
+    this.boundingRight = 0,
+    this.boundingTop = 0,
+    this.boundingBottom = 0,
     this.orientation = CameraOrientation.portraitUp,
     this.performanceMode = FaceDetectorMode.fast,
     required this.onCapture,
@@ -53,8 +57,20 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
   /// Set horizontal off set degree(s) when detect face.
   final double offSetY;
 
-  /// Set rotating off set degree(s) when detect face.
+  /// Set the rotating off set degree(s) when detect face.
   final double offSetZ;
+
+  /// Set the left bounding limit when detect face.
+  final double boundingLeft;
+
+  /// Set the right bounding limit when detect face.
+  final double boundingRight;
+
+  /// Set the top bounding limit when detect face.
+  final double boundingTop;
+
+  /// Set the bottom bounding limit when detect face.
+  final double boundingBottom;
 
   /// Use this to lock camera orientation.
   final CameraOrientation? orientation;
@@ -196,7 +212,11 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
                 performanceMode: performanceMode,
                 offSetZ: offSetZ,
                 offSetY: offSetY,
-                offSetX: offSetX)
+                offSetX: offSetX,
+                boundingLeft: boundingLeft,
+                boundingRight: boundingRight,
+                boundingTop: boundingTop,
+                boundingBottom: boundingBottom)
             .then((result) async {
           value = value.copyWith(detectedFace: result);
 

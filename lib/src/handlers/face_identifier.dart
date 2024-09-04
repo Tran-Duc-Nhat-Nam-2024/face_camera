@@ -12,7 +12,7 @@ class FaceIdentifier {
       {required CameraImage cameraImage,
       required CameraController? controller,
       required FaceDetectorMode performanceMode,
-      double offSetX = 5, double offSetY = 5, double offSetZ = 5}) async {
+      double offSetX = 5, double offSetY = 5, double offSetZ = 5, double boundingLeft = -1000, double boundingRight = 2000, double boundingTop = -1000, double boundingBottom = 4000}) async {
     final orientations = {
       DeviceOrientation.portraitUp: 0,
       DeviceOrientation.landscapeLeft: 90,
@@ -25,7 +25,7 @@ class FaceIdentifier {
         performanceMode: performanceMode,
         visionImage:
             _inputImageFromCameraImage(cameraImage, controller, orientations)
-        , offSetX: offSetX, offSetY: offSetY, offSetZ: offSetZ);
+        , offSetX: offSetX, offSetY: offSetY, offSetZ: offSetZ, boundingLeft: boundingLeft, boundingRight:  boundingRight, boundingTop: boundingTop, boundingBottom: boundingBottom);
     if (face != null) {
       result = face;
     }
@@ -93,7 +93,7 @@ class FaceIdentifier {
   static Future<DetectedFace?> _detectFace(
       {required InputImage? visionImage,
       required FaceDetectorMode performanceMode,
-        double offSetX = 5, double offSetY = 5, double offSetZ = 5}) async {
+        double offSetX = 5, double offSetY = 5, double offSetZ = 5, double boundingLeft = -1000, double boundingRight = 2000, double boundingTop = -1000, double boundingBottom = 4000}) async {
     if (visionImage == null) return null;
     final options = FaceDetectorOptions(
         enableLandmarks: true,
@@ -102,7 +102,7 @@ class FaceIdentifier {
     final faceDetector = FaceDetector(options: options);
     try {
       final List<Face> faces = await faceDetector.processImage(visionImage);
-      final faceDetect = _extractFace(faces, offSetX: offSetX, offSetY: offSetY, offSetZ: offSetZ);
+      final faceDetect = _extractFace(faces, offSetX: offSetX, offSetY: offSetY, offSetZ: offSetZ, boundingLeft: boundingLeft, boundingRight:  boundingRight, boundingTop: boundingTop, boundingBottom: boundingBottom);
       return faceDetect;
     } catch (error) {
       debugPrint(error.toString());
@@ -111,7 +111,7 @@ class FaceIdentifier {
   }
 
   static _extractFace(List<Face> faces, {
-  double offSetX = 5, double offSetY = 5, double offSetZ = 5}) {
+  double offSetX = 5, double offSetY = 5, double offSetZ = 5, double boundingLeft = -1000, double boundingRight = 2000, double boundingTop = -1000, double boundingBottom = 4000}) {
     //List<Rect> rect = [];
     bool wellPositioned = false;
     Face? detectedFace;
@@ -121,6 +121,10 @@ class FaceIdentifier {
 
       if (face.headEulerAngleX! < offSetX && face.headEulerAngleX! > -offSetX && face.headEulerAngleY! < offSetY && face.headEulerAngleY! > -offSetY && face.headEulerAngleZ! < offSetZ && face.headEulerAngleZ! > -offSetZ) {
         wellPositioned = true;
+      }
+
+      if (face.boundingBox.left < boundingLeft && face.boundingBox.right > boundingRight && face.boundingBox.top < boundingTop && face.boundingBox.bottom > boundingBottom) {
+        wellPositioned = false;
       }
     }
 
